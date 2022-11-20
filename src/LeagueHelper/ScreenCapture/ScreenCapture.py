@@ -8,16 +8,16 @@ from pathlib import Path
 
 class ScreenCapture:
     def __init__(self) -> None:
+        """Bounding boxes carry data that was extracted by using gimp markers. _get_bb_data can determine the cv2 bounding boxes."""
         self._bounding_boxes = {
-            "screen": {"top": 0, "left": 0, "width": 2560, "height": 1440},
-            "minimap": {"top": 1067, "left": 2188, "width": 372, "height": 373},
-            "champions_summary": {
-                "top": 0,
-                "left": 0,
-                "width": 2560,
-                "height": 1440,
-            },  # 2129 873 431 189
+            "minimap": {"left": 2188, "top": 1067, "width": 403, "height": 389},
             "champion_status": {
+                "left": 691,
+                "top": 1235,
+                "width": 1086,
+                "height": 209,
+            },
+            "champions_summary": {
                 "top": 0,
                 "left": 0,
                 "width": 2560,
