@@ -22,6 +22,8 @@ class DataScraper:
         # maximize browser
         self._driver.maximize_window()
 
+        self._enable_download_champ_icons = False
+
     def __del__(self):
         self._driver.quit()
 
@@ -43,14 +45,18 @@ class DataScraper:
     def _download_champ_data(self, *args):
         self._open_url(f"https://leagueoflegends.fandom.com/wiki/{args[0]}/LoL")
         self._confirm_cookies()
-        path = str(self._image_path / (args[0] + "/"))
-        file = Path(f"{args[0]}_circle.png")
+        if self._enable_download_champ_icons:
+            self._download_champ_icons(args[0])
+
+    def _download_champ_icons(self, champ):
+        path = str(self._image_path / (champ + "/"))
+        file = Path(f"{champ}_circle.png")
         Path(path).mkdir(parents=True, exist_ok=True)
         with open(path / file, "wb") as file:
             time.sleep(1)
             try:
                 image = self._driver.find_element(
-                    By.XPATH, f"//img[@alt='{args[0]} OriginalCircle.png']"
+                    By.XPATH, f"//img[@alt='{champ} OriginalCircle.png']"
                 )
                 logging.info("Saving Image: " + path)
                 file.write(image.screenshot_as_png)
