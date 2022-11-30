@@ -1,5 +1,5 @@
 import cv2
-from LeagueHelper.ScreenCapture import ScreenCapture
+from LeagueHelper.ScreenCapture import screen_capture
 import datetime
 from pathlib import Path
 
