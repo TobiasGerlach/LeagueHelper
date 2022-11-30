@@ -2,18 +2,17 @@ import pytest
 import cv2
 import sys
 from LeagueHelper.Static import MinimapAnalyzer
-
+from pathlib import Path
 
 
 class TestMinimapAnalyzer:
     def test_get_champions(self):
-        print(sys.path)
         assert False
 
     def test_find_circles(self):
-        minimap = cv2.imread(
-            "C:\\Users\\tobia\\Documents\\Code\\LeagueHelper\\tests\\media\\minimap.png"
-        )
+        media_path = Path(__file__).parent.parent / "media"
+        minimap = cv2.imread(str(media_path / "minimap.png"))
+        print(minimap)
         assert False
 
     def test_determine_champions(self):
