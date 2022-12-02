@@ -13,10 +13,11 @@ logging.basicConfig(filename="data_scraper.log", encoding="utf-8", level=logging
 
 class DataScraper:
     def __init__(self) -> None:
-        self._image_path = Path(__file__).parents[2] / Path("media\\images")
+        self._image_path = Path(__file__).parents[2] / Path("data\\champions")
         # set chromedriver.exe path
         self._driver = webdriver.Chrome(
-            executable_path=b"C:\\Users\\tobia\\Documents\\Code\\LeagueHelper\\src\\related_scripts\\chromedriver.exe"
+            executable_path=Path(__file__).GetDirectoryName()
+            / "C:\\Users\\tobia\\Documents\\Code\\LeagueHelper\\src\\related_scripts\\chromedriver.exe"
         )
         self._driver.implicitly_wait(0.5)
         # maximize browser
