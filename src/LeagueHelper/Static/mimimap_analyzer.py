@@ -26,11 +26,9 @@ class MinimapAnalyzer:
             raise Exception("Invalid Color")
         im = copy.copy(minimap)
         im = cv2.inRange(im, LOWER_BOUNDS, UPPER_BOUNDS)
-        # im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-        cv2.imshow("ss", im)
         minDist = 7
         param1 = 500
-        param2 = 5  # smaller value-> more false circles
+        param2 = 5
         minRadius = 14
         maxRadius = 14
         circles = cv2.HoughCircles(
@@ -46,10 +44,8 @@ class MinimapAnalyzer:
         return circles
 
     def _find_circles(self, minimap):
-
         circles_red = self._get_circles(minimap, "red")
         circles_blue = self._get_circles(minimap, "blue")
-
         return circles_red, circles_blue
 
     def _determine_champions(self):
