@@ -12,8 +12,28 @@ class MinimapAnalyzer:
 
     def get_champions(self, minimap: np.array):
         champ_koords = self._find_circles(minimap)
-        for champ in self._champions:
-            self._determine_champions()
+        icons = self._get_icon_list_from_circles(champ_koords, minimap)
+        champions = [
+            self._determine_champion(champ, icons) for champ in self._champions
+        ]
+
+    def _get_icon_list_from_circles(self, champ_koords, minimap):
+        red = [
+            minimap[
+                int(koords[1]) - 15 : int(koords[1]) + 15,
+                int(koords[0]) - 15 : int(koords[0]) + 15,
+            ]
+            for koords in champ_koords[0][0]
+        ]
+        blue = [
+            minimap[
+                int(koords[1]) - 14 : int(koords[1]) + 17,
+                int(koords[0]) - 15 : int(koords[0]) + 16,
+            ]
+            for koords in champ_koords[1][0]
+        ]
+
+        return red, blue
 
     def _get_circles(self, minimap: np.array, color: str):
         if color == "red":
@@ -48,8 +68,35 @@ class MinimapAnalyzer:
         circles_blue = self._get_circles(minimap, "blue")
         return circles_red, circles_blue
 
-    def _determine_champions(self):
-        pass
+    def _determine_champion(self, champ, icons):
+        red_icons = icons[0]
+        blue_icons = icons[1]
+        tempalte = cv2.resize(champ.champ_icon, (30, 30))
+        min_diff = 1000000000
+        for count, ic in enumerate(red_icons):
+            ic = cv2.resize(ic, (30, 30))
+            diff = cv2.subtract(ic, tempalte).sum()
+            if diff < min_diff:
+                min_diff = diff
+                color_idx, champion_idx = (0, count)
+        for count, ic in enumerate(blue_icons):
+            ic = cv2.resize(ic, (30, 30))
+
+            diff = cv2.subtract(ic, tempalte).sum()
+            if diff < min_diff:
+                min_diff = diff
+                color_idx, champion_idx = (1, count)
+            cv2.imshow("asd", ic)
+            cv2.imshow("ggg", tempalte)
+            print(diff)
+            cv2.waitKey(0)
+
+        print(champ._NAME)
+        print(color_idx, "   ", champion_idx)
+
+        color_idx = 0
+        champion_idx = 0
+        return (color_idx, champion_idx)
 
     def _tempalte_matching(self, minimap: np.array, template: np.array):
         img_gray = cv2.cvtColor(minimap, cv2.COLOR_BGR2GRAY)
@@ -63,9 +110,26 @@ class MinimapAnalyzer:
 
 
 if __name__ == "__main__":
-    ma = MinimapAnalyzer(champions=0)
+    champions = [
+        Champion("KSante"),
+        Champion("Azir"),
+        Champion("Ahri"),
+        Champion("Amumu"),
+        Champion("Shyvana"),
+        Champion("Jhin"),
+        Champion("KaiSa"),
+    ]
+    ma = MinimapAnalyzer(champions=champions)
+
     minimap = cv2.imread(
         "C:\\Users\\tobia\\Documents\\Code\\LeagueHelper\\tests\\media\\minimap.png"
     )
+    ma.get_champions(minimap)
 
-    im = ma._find_circles(minimap)
+if __name__ == "__mai0n__":
+    NAME = "Ahri"
+    data_path = Path(__file__).parents[3] / ("data/champions/" + NAME)
+    image_path = str(data_path / (NAME + "_circle.png"))
+    # print(image_path)
+    champ_icon = cv2.imread(image_path)
+    print(champ_icon)
